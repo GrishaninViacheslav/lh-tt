@@ -23,6 +23,12 @@ android {
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
         }
     }
+    buildTypes.each {
+        Properties properties = new Properties()
+        properties.load(project.rootProject.file("api.properties").newDataInputStream())
+        def mapApiKey = properties.getProperty("MAP_API_KEY", "[EXCEPTION PLACEHOLDER, LOOK AT BUILD.GRADLE: failed to extract mapApiKey from api.properties]")
+        it.buildConfigField "String", "MAP_API_KEY", mapApiKey
+    }
     buildFeatures {
         viewBinding true
     }
@@ -40,7 +46,11 @@ dependencies {
     implementation project(path: ':network')
     implementation project(path: ':navigation')
     implementation project(path: ':companies-list')
+    implementation project(path: ':company-details')
 
     // Splash screen
     implementation 'androidx.core:core-splashscreen:1.0.0'
+
+    // Map
+    implementation 'com.yandex.android:maps.mobile:4.2.1-lite'
 }
